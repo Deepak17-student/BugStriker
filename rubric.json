@@ -1,0 +1,9 @@
+{
+  "problem_id": "second_largest",
+  "title": "Return the second-largest distinct number",
+  "test_cases": [
+    {"input": "[5, 1, 9, 3]", "expected": "5"},
+    {"input": "[5, 5, 2]", "expected": "2"},
+    {"input": "[7]", "expected": "'invalid input'"}
+  ]
+}

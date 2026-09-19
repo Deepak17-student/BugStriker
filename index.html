@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BugStriker Simple</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10 font-sans">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md">
+        <h1 class="text-2xl font-bold mb-4">BugStriker Agent</h1>
+        
+        <p class="mb-2 text-sm text-gray-600">Problem: Find the second-largest distinct number.</p>
+        <textarea id="code" class="w-full h-40 p-4 border rounded font-mono text-sm mb-4">def second_largest(a):
+    a.sort()
+    return a[-2]</textarea>
+        
+        <button onclick="submitCode()" class="bg-blue-600 text-white px-6 py-2 rounded font-bold">Submit Code</button>
+
+        <div id="agent-section" class="mt-8 hidden border-t pt-6">
+            <div class="bg-indigo-50 p-4 rounded mb-4">
+                <p id="question" class="text-indigo-800 font-medium"></p>
+            </div>
+            <textarea id="explanation" placeholder="Explain the bug..." class="w-full p-2 border rounded mb-4 h-20 text-sm"></textarea>
+            <textarea id="revised_code" class="w-full h-40 p-2 border rounded font-mono text-sm mb-4"></textarea>
+            <button onclick="submitRevision()" class="bg-green-600 text-white px-6 py-2 rounded font-bold">Submit Revision</button>
+        </div>
+
+        <div id="final-verdict" class="mt-6 p-4 bg-green-100 text-green-800 rounded hidden font-bold"></div>
+    </div>
+
+    <script>
+        async function submitCode() {
+            const code = document.getElementById('code').value;
+            const res = await fetch('/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({code})
+            });
+            const data = await res.json();
+            document.getElementById('agent-section').classList.remove('hidden');
+            document.getElementById('question').innerText = data.question;
+            document.getElementById('revised_code').value = code;
+        }
+
+        async function submitRevision() {
+            const explanation = document.getElementById('explanation').value;
+            const revised_code = document.getElementById('revised_code').value;
+            const res = await fetch('/respond', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({explanation, revised_code})
+            });
+            const data = await res.json();
+            document.getElementById('final-verdict').classList.remove('hidden');
+            document.getElementById('final-verdict').innerText = data.verdict;
+        }
+    </script>
+</body>
+</html>
